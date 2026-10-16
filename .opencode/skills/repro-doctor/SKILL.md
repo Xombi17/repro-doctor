@@ -96,7 +96,7 @@ make test
 python -m compileall -q repro_doctor tests
 python -m repro_doctor --help
 git diff --check
-for prefix in /home/ /Users/ /workspace/ /mnt/; do
+for prefix in "$(printf '/%s/' home)" "$(printf '/%s/' Users)" "$(printf '/%s/' workspace)" "$(printf '/%s/' mnt)"; do
   git grep -nF -- "$prefix" -- ':!*.pyc' && exit 1 || true
 done
 ```
