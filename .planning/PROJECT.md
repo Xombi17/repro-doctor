@@ -76,3 +76,23 @@ The result is considered successful only when the generated Docker image builds 
 - OmniRush will be integrated through a subprocess adapter around the installed `omnirush` CLI, with a fake adapter for tests.
 - Docker is a required verifier prerequisite for real runs, but unit tests will not require Docker.
 - A local MIT license will make the project open-source-ready. Publishing requires a user-provided GitHub remote and will not happen automatically.
+
+## Current state
+
+Version 1 is implemented and archived. The CLI supports isolated Python and
+Node.js/TypeScript analysis, four-role OmniRush generation, Docker verification,
+bounded repair, applyable patches, reports, clean-copy validation, and release
+documentation. The offline suite passes 41 tests.
+
+The Docker build gate is explicitly unverified in the development workspace
+because `/var/run/docker.sock` is not accessible to the current user. Re-run
+the documented project and target-fixture Docker checks on a Docker-capable
+machine before treating the release as Docker-verified.
+
+## Next milestone goals
+
+- Start a fresh requirements and roadmap cycle with `/gsd-new-milestone`.
+- Re-run project and generated-target Docker verification in an environment with
+  an accessible daemon and registry access.
+- Consider future support for additional repository ecosystems only after a
+  new scope decision; v1 remains limited to Python and Node.js/TypeScript.
