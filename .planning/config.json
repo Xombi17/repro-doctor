@@ -1,0 +1,12 @@
+{
+  "workflow": "gsd",
+  "mode": "interactive",
+  "research": true,
+  "planning_depth": "thorough",
+  "plan_review": true,
+  "verification": true,
+  "commit_docs": true,
+  "commit_code": true,
+  "default_phase_command": "/gsd-plan-phase",
+  "project_name": "repro-doctor"
+}
