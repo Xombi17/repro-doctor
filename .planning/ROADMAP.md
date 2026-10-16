@@ -2,7 +2,7 @@
 
 ## Milestone: v1 — reproducible Python and Node/TypeScript repositories
 
-### Phase 1: Foundation and Python path
+### Phase 1: Foundation and Python path — COMPLETE
 
 **Goal:** Process a Python repository from input through patch generation with a clean, deterministic internal architecture.
 
@@ -27,7 +27,14 @@
 - Generated artifacts contain the expected Python runtime, dependency, Docker, test, and documentation data.
 - Project `make test` passes.
 
-### Phase 2: Node and TypeScript path
+**Evidence:**
+
+- `make test` — passed, 11 tests.
+- Fixture patch application — passed through `git apply --check` and `git apply`.
+- Source snapshot preservation — passed in the pipeline test.
+- Project Docker build was attempted but exceeded the local 120-second command timeout while fetching image metadata; Docker verification remains in Phase 4 and final clean-clone validation remains in Phase 5.
+
+### Phase 2: Node and TypeScript path — NEXT
 
 **Goal:** Add Node/TypeScript detection and artifact generation while preserving the Python path.
 

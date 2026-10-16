@@ -3,9 +3,9 @@
 ## Current position
 
 - **Milestone:** v1 — reproducible Python and Node/TypeScript repositories
-- **Current phase:** 1 — foundation and Python path
-- **Status:** project initialized; implementation not started
-- **Next action:** run `/gsd-plan-phase 1`
+- **Current phase:** 2 — Node and TypeScript path
+- **Status:** Phase 1 complete; Phase 2 ready to plan
+- **Next action:** discuss and plan Phase 2
 
 ## Confirmed decisions
 
@@ -26,4 +26,7 @@
 
 ## Verification record
 
-No project checks have run yet. The planning artifacts are the first project files.
+- Phase 1 `make test`: passed, 11 tests.
+- Phase 1 fixture patch application: passed.
+- Phase 1 source immutability check: passed.
+- Project Docker build: attempted; local command timed out while fetching image metadata after 120 seconds. This is not counted as a passing check.
