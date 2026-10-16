@@ -143,6 +143,21 @@ run the checks, handle unavailable Docker safely, and report or commit the
 result. The skill is a thin workflow layer around this CLI, so the same
 commands remain reproducible outside an agent session.
 
+The packaged skill is also downloadable from the repository:
+
+```bash
+curl -L \
+  -o repro-doctor.skill \
+  https://github.com/Xombi17/repro-doctor/raw/main/repro-doctor.skill
+mkdir -p .opencode/skills
+unzip -o repro-doctor.skill -d .opencode/skills
+```
+
+The source and package are available at:
+
+- [Skill source](https://github.com/Xombi17/repro-doctor/tree/main/.opencode/skills/repro-doctor)
+- [Download `repro-doctor.skill`](https://github.com/Xombi17/repro-doctor/raw/main/repro-doctor.skill)
+
 ## Deploy
 
 Cloud deployment, image publishing, CI-provider configuration, GitHub pushes,
