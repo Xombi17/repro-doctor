@@ -14,6 +14,9 @@ The runtime uses only the standard library. Do not install project dependencies
 globally. `make test` does not require the optional development install and is
 the offline test path.
 
+Copy `.env.example` to a private `.env` only when you need executable overrides.
+Never commit `.env` or place credentials in `.env.example`.
+
 ## Before proposing a change
 
 Run the focused test command and the release checks that apply to the change:
@@ -66,3 +69,4 @@ changing application behavior while working on reproducibility artifacts.
       when applicable.
 - [ ] Documentation commands match `python -m repro_doctor --help`.
 - [ ] No secret or environment-specific absolute path is included.
+- [ ] `.env.example` contains only safe setting names and placeholders.

@@ -16,6 +16,7 @@ marked successful without observed output.
   this environment cannot access the Docker daemon; the exact result is below.
 - [x] No CI-provider configuration or cloud deployment behavior was added.
 - [x] Report examples contain schema fields and no credentials.
+- [x] `.env.example` documents safe executable overrides; `.env` is ignored and no secrets are committed.
 
 ## Functional traceability
 

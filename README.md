@@ -12,6 +12,8 @@ repository. It works from a local path or a public GitHub HTTPS URL.
 - Docker for the default generated-artifact verification and the project image.
 - The `omnirush` executable for the default agent mode. Use local mode when it
   is not available.
+- Optional settings are documented in [`.env.example`](.env.example); never put
+  credentials in that file.
 
 Runtime code uses only the Python standard library. Optional development
 dependencies are pinned in [`requirements-dev.lock`](requirements-dev.lock).
@@ -37,6 +39,9 @@ make test
 
 The dependency install can contact the Python package index. `make test` is
 standard-library-only and is the supported offline project check.
+
+If you need executable overrides, copy `.env.example` to a private `.env` file
+and export the values in your shell. The `.env` file is ignored by Git.
 
 ## Run
 
@@ -121,11 +126,22 @@ Build the project CLI image and view its help command:
 ```bash
 docker build -t repro-doctor .
 docker run --rm repro-doctor
+docker run --rm repro-doctor make test
 ```
 
 The project Dockerfile uses Python 3.12 and the image command is the CLI help
-path. A build may need network access to pull the base image. The target
+path. It also includes GNU Make so the same image can run the project test
+command. A build may need network access to pull the base image. The target
 repository image created during CLI verification is separate and local.
+
+## Agent skill
+
+The complete rebuild workflow is also available as the repository-local
+`repro-doctor` skill at `.opencode/skills/repro-doctor/SKILL.md`. It tells an
+agent how to inspect the repository, repair missing reproducibility files,
+run the checks, handle unavailable Docker safely, and report or commit the
+result. The skill is a thin workflow layer around this CLI, so the same
+commands remain reproducible outside an agent session.
 
 ## Deploy
 

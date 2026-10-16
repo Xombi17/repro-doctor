@@ -6,3 +6,6 @@ repro-doctor-output/
 dist/
 build/
 *.egg-info/
+.env
+.env.*
+!.env.example

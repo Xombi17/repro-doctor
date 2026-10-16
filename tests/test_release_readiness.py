@@ -127,6 +127,7 @@ class ReleaseReadinessTests(unittest.TestCase):
             "LICENSE",
             ".python-version",
             "requirements-dev.lock",
+            ".env.example",
         )
         for name in required:
             with self.subTest(name=name):
@@ -147,6 +148,14 @@ class ReleaseReadinessTests(unittest.TestCase):
         self.assertTrue(
             all(re.fullmatch(r"[A-Za-z0-9_.-]+==[^\s]+", line) for line in lock_lines)
         )
+        env_example = (PROJECT_ROOT / ".env.example").read_text(encoding="utf-8")
+        self.assertIn("OMNIRUSH_BIN=omnirush", env_example)
+        self.assertIn("DOCKER_BIN=docker", env_example)
+        for marker in _SECRET_MARKERS:
+            self.assertNotIn(marker, env_example)
+
+        dockerfile = (PROJECT_ROOT / "Dockerfile").read_text(encoding="utf-8")
+        self.assertIn("apt-get install -y --no-install-recommends make", dockerfile)
 
     def test_readme_documents_the_actual_cli_contract(self):
         readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
@@ -184,6 +193,7 @@ class ReleaseReadinessTests(unittest.TestCase):
             "make test",
             "docker build -t repro-doctor .",
             "docker run --rm repro-doctor",
+            "docker run --rm repro-doctor make test",
         ):
             with self.subTest(command=command):
                 self.assertIn(command, readme)
@@ -211,3 +221,11 @@ class ReleaseReadinessTests(unittest.TestCase):
                     self.assertIn(fragment, text)
                 for marker in _SECRET_MARKERS:
                     self.assertNotIn(marker, text)
+
+    def test_tracked_files_do_not_embed_this_machine_paths(self):
+        forbidden = (str(PROJECT_ROOT), f"{Path.home()}/")
+        for relative, content in _meaningful_files(PROJECT_ROOT).items():
+            text = content.decode("utf-8", errors="ignore")
+            for prefix in forbidden:
+                with self.subTest(path=relative, prefix=prefix):
+                    self.assertNotIn(prefix, text)
