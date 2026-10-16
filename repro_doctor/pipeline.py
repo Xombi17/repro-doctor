@@ -4,9 +4,9 @@ from pathlib import Path
 from typing import Protocol
 
 from .artifacts import generate_artifacts, materialize
-from .detect import detect_python
+from .detect import detect_repository
 from .inputs import CloneRunner, copy_snapshot, ensure_output_is_safe, isolated_snapshot
-from .models import Artifact, PythonProfile, RunResult
+from .models import Artifact, Profile, RunResult
 from .patching import build_patch, write_patch
 from .report import render_report
 
@@ -14,12 +14,12 @@ from .report import render_report
 class GenerationRunner(Protocol):
     """Boundary for the in-process generator and future agent runners."""
 
-    def generate(self, root: Path, profile: PythonProfile) -> tuple[Artifact, ...]:
+    def generate(self, root: Path, profile: Profile) -> tuple[Artifact, ...]:
         ...
 
 
 class InProcessGenerationRunner:
-    def generate(self, root: Path, profile: PythonProfile) -> tuple[Artifact, ...]:
+    def generate(self, root: Path, profile: Profile) -> tuple[Artifact, ...]:
         return generate_artifacts(root, profile)
 
 
@@ -40,7 +40,7 @@ def process_repository(
     with isolated_snapshot(source, clone_runner=clone_runner) as snapshot:
         baseline = snapshot.root.parent / "baseline"
         copy_snapshot(snapshot.root, baseline)
-        profile = detect_python(snapshot.root)
+        profile = detect_repository(snapshot.root)
         artifacts = runner.generate(snapshot.root, profile)
         materialize(snapshot.root, artifacts)
         patch_result = build_patch(baseline, snapshot.root)

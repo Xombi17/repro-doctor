@@ -1,7 +1,7 @@
 # repro-doctor
 
-`repro-doctor` creates a reviewable reproducibility patch for a Python
-repository without modifying the input repository.
+`repro-doctor` creates a reviewable reproducibility patch for a Python or
+Node.js/TypeScript repository without modifying the input repository.
 
 ## Requirements
 
@@ -29,8 +29,10 @@ python -m repro_doctor ./path/to/repository --output-dir ./repro-doctor-output
 python -m repro_doctor https://github.com/example/project.git --output-dir ./repro-doctor-output
 ```
 
-Phase 1 supports Python repositories. GitHub input requires a repository that
-is publicly cloneable by the local Git installation.
+The detector supports Python and Node.js/TypeScript repositories. Node
+projects may use npm, pnpm, or Yarn; an existing package manager declaration
+or lockfile is preserved. GitHub input requires a repository that is publicly
+cloneable by the local Git installation.
 
 ## Test
 

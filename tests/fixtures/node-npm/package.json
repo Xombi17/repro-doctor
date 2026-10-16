@@ -1,0 +1,8 @@
+{
+  "name": "node-npm-fixture",
+  "version": "1.0.0",
+  "packageManager": "npm@10.8.2",
+  "scripts": {
+    "test": "node --test"
+  }
+}

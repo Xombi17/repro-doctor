@@ -12,7 +12,7 @@ from .pipeline import process_repository
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="repro-doctor",
-        description="Generate an applyable reproducibility patch for a Python repository.",
+        description="Generate an applyable reproducibility patch for a Python or Node.js repository.",
     )
     parser.add_argument("source", help="local repository path or GitHub HTTPS URL")
     parser.add_argument(
@@ -36,7 +36,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: filesystem operation failed: {exc}", file=sys.stderr)
         return 2
 
-    print(f"Detected Python repository ({result.profile.confidence} confidence)")
+    stack = "Node.js/TypeScript" if getattr(result.profile, "stack", "") == "node" else "Python"
+    print(f"Detected {stack} repository ({result.profile.confidence} confidence)")
     print(f"Patch: {result.patch_path}")
     print(f"Report: {result.report_path}")
     print(f"Changed files: {len(result.changed_files)}")
