@@ -25,6 +25,8 @@ class ArtifactTests(unittest.TestCase):
 
             self.assertIn("Dockerfile", by_name)
             self.assertIn("FROM python:3.12-slim", by_name["Dockerfile"])
+            self.assertIn("apt-get install -y --no-install-recommends make", by_name["Dockerfile"])
+            self.assertIn('CMD ["make", "test"]', by_name["Dockerfile"])
             self.assertIn("python -m unittest discover -s tests", by_name["Makefile"])
             self.assertEqual(by_name[".python-version"], "3.12\n")
             self.assertIn("dependency lock proposal", by_name["requirements.repro-doctor.txt"])

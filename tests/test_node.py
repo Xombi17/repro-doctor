@@ -139,6 +139,26 @@ class NodeArtifactTests(unittest.TestCase):
         self.assertIn("npm run test:ci", artifacts["Makefile"])
         self.assertIn("TypeScript", artifacts["README.repro-doctor.md"])
 
+    def test_repairs_existing_makefile_when_package_test_script_differs(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "package.json").write_text(
+                '{"name":"mismatched-make","scripts":{"test":"node --test"}}\n',
+                encoding="utf-8",
+            )
+            (root / "Makefile").write_text(
+                ".PHONY: test\n\ntest:\n\tnpm run lint\n",
+                encoding="utf-8",
+            )
+
+            profile = detect_node(root)
+            artifacts = {artifact.path: artifact.content for artifact in generate_artifacts(root, profile)}
+
+            self.assertEqual(profile.test_command, "npm test")
+            self.assertIn("Makefile", artifacts)
+            self.assertIn("\tnpm test\n", artifacts["Makefile"])
+            self.assertNotIn("\tnpm run lint\n", artifacts["Makefile"])
+
 
 class NodePipelineTests(unittest.TestCase):
     def test_pipeline_keeps_fixture_unchanged_and_emits_applyable_patch(self):

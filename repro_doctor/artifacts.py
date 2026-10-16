@@ -28,6 +28,8 @@ def _dockerfile(root: Path, profile: PythonProfile) -> str:
         "",
         "ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1",
         "WORKDIR /app",
+        "",
+        "RUN apt-get update && apt-get install -y --no-install-recommends make && rm -rf /var/lib/apt/lists/*",
         "COPY . .",
     ]
     if install_lines:
@@ -84,6 +86,42 @@ def _append_test_target(existing: str, profile: Profile) -> str:
         f"{existing}{suffix}\n# Added by repro-doctor.\n"
         f".PHONY: test\n\ntest:\n\t{profile.test_command}\n"
     )
+
+
+def _existing_make_test_command(existing: str) -> str | None:
+    in_test = False
+    for raw_line in existing.splitlines():
+        if raw_line and not raw_line[0].isspace() and raw_line.startswith("test:"):
+            in_test = True
+            continue
+        if in_test and raw_line.startswith("\t"):
+            command = raw_line.strip().removeprefix("@")
+            if command:
+                return command
+        elif in_test and raw_line and not raw_line[0].isspace():
+            in_test = False
+    return None
+
+
+def _replace_test_target(existing: str, profile: Profile) -> str:
+    lines = existing.splitlines(keepends=True)
+    target_index = next(
+        (
+            index
+            for index, line in enumerate(lines)
+            if line and not line[0].isspace() and line.startswith("test:")
+        ),
+        None,
+    )
+    if target_index is None:
+        return _append_test_target(existing, profile)
+
+    recipe_end = target_index + 1
+    while recipe_end < len(lines) and lines[recipe_end].startswith(("\t", " ")):
+        recipe_end += 1
+    newline = "\r\n" if "\r\n" in existing else "\n"
+    replacement = f"\t{profile.test_command}{newline}"
+    return "".join(lines[: target_index + 1] + [replacement] + lines[recipe_end:])
 
 
 def _dependency_proposal(root: Path, profile: PythonProfile) -> str:
@@ -258,14 +296,26 @@ def generate_artifacts(root: Path, profile: Profile) -> tuple[Artifact, ...]:
     makefile = root / "Makefile"
     if not makefile.exists():
         artifacts.append(Artifact("Makefile", _makefile(profile), "add test entry point"))
-    elif not re.search(r"^test\s*:", makefile.read_text(encoding="utf-8"), re.MULTILINE):
-        artifacts.append(
-            Artifact(
-                "Makefile",
-                _append_test_target(makefile.read_text(encoding="utf-8"), profile),
-                "add missing test entry point",
+    else:
+        makefile_content = makefile.read_text(encoding="utf-8")
+        if not re.search(r"^test\s*:", makefile_content, re.MULTILINE):
+            artifacts.append(
+                Artifact(
+                    "Makefile",
+                    _append_test_target(makefile_content, profile),
+                    "add missing test entry point",
+                )
             )
-        )
+        elif isinstance(profile, NodeProfile) and _existing_make_test_command(
+            makefile_content
+        ) != profile.test_command:
+            artifacts.append(
+                Artifact(
+                    "Makefile",
+                    _replace_test_target(makefile_content, profile),
+                    "align test entry point with detected package test command",
+                )
+            )
     if isinstance(profile, NodeProfile):
         if not (root / ".nvmrc").exists():
             artifacts.append(Artifact(".nvmrc", f"{profile.runtime}\n", "pin Node runtime"))
