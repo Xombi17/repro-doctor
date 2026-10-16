@@ -1,5 +1,6 @@
 import contextlib
 import io
+import os
 import tempfile
 from types import SimpleNamespace
 import unittest
@@ -57,6 +58,12 @@ class CliTests(unittest.TestCase):
         self.assertIn("--mode {agent,local}", help_text)
         self.assertIn("--agent-timeout AGENT_TIMEOUT", help_text)
         self.assertIn("--skip-verification", help_text)
+
+    def test_help_is_not_colorized_when_python_enables_argparse_colors(self):
+        with patch.dict(os.environ, {"PYTHON_COLORS": "1"}):
+            help_text = build_parser().format_help()
+
+        self.assertNotIn("\x1b[", help_text)
 
     def test_agent_timeout_is_forwarded_and_reported(self):
         stderr = io.StringIO()

@@ -13,10 +13,16 @@ from .verifier import DEFAULT_DOCKER_TIMEOUT
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog="repro-doctor",
-        description="Generate an applyable reproducibility patch for a Python or Node.js repository.",
-    )
+    parser_options = {
+        "prog": "repro-doctor",
+        "description": "Generate an applyable reproducibility patch for a Python or Node.js repository.",
+    }
+    # Python 3.14 adds colored argparse help by default. Keep the CLI contract
+    # stable for scripts and tests, while retaining compatibility with 3.12.
+    try:
+        parser = argparse.ArgumentParser(color=False, **parser_options)
+    except TypeError:
+        parser = argparse.ArgumentParser(**parser_options)
     parser.add_argument("source", help="local repository path or GitHub HTTPS URL")
     parser.add_argument(
         "--output-dir",

@@ -82,7 +82,8 @@ The result is considered successful only when the generated Docker image builds 
 Version 1 is implemented and archived. The CLI supports isolated Python and
 Node.js/TypeScript analysis, four-role OmniRush generation, Docker verification,
 bounded repair, applyable patches, reports, clean-copy validation, and release
-documentation. The offline suite passes 41 tests.
+documentation. The offline suite passes 42 tests, including a follow-up
+portability check for Python 3.14's colored argparse help.
 
 The Docker build gate is explicitly unverified in the development workspace
 because `/var/run/docker.sock` is not accessible to the current user. Re-run
