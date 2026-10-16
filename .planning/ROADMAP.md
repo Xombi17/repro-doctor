@@ -34,7 +34,7 @@
 - Source snapshot preservation — passed in the pipeline test.
 - Project Docker build was attempted but exceeded the local 120-second command timeout while fetching image metadata; Docker verification remains in Phase 4 and final clean-clone validation remains in Phase 5.
 
-### Phase 2: Node and TypeScript path — NEXT
+### Phase 2: Node and TypeScript path — COMPLETE
 
 **Goal:** Add Node/TypeScript detection and artifact generation while preserving the Python path.
 
@@ -55,7 +55,14 @@
 - The generated Dockerfile builds and the generated `make test` command is correct for the fixture.
 - Project `make test` continues to pass.
 
-### Phase 3: Parallel OmniRush agent orchestration
+**Evidence:**
+
+- `make test` — passed, 20 tests.
+- Node fixture patch application — passed through `git apply --check`.
+- Node fixture source immutability — passed.
+- Python regression coverage — passed in the same 20-test suite.
+
+### Phase 3: Parallel OmniRush agent orchestration — NEXT
 
 **Goal:** Replace direct artifact decisions with four parallel OmniRush roles and live progress.
 

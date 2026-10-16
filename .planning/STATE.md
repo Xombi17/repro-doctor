@@ -3,9 +3,9 @@
 ## Current position
 
 - **Milestone:** v1 — reproducible Python and Node/TypeScript repositories
-- **Current phase:** 2 — Node and TypeScript path
-- **Status:** Phase 1 complete; Phase 2 ready to plan
-- **Next action:** discuss and plan Phase 2
+- **Current phase:** 3 — parallel OmniRush agent orchestration
+- **Status:** Phases 1–2 complete; Phase 3 ready to plan
+- **Next action:** discuss and plan Phase 3
 
 ## Confirmed decisions
 
@@ -30,3 +30,5 @@
 - Phase 1 fixture patch application: passed.
 - Phase 1 source immutability check: passed.
 - Project Docker build: attempted; local command timed out while fetching image metadata after 120 seconds. This is not counted as a passing check.
+- Phase 2 `make test`: passed, 20 tests.
+- Phase 2 Node fixture patch application and source immutability: passed.
