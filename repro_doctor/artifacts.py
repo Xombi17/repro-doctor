@@ -48,7 +48,7 @@ def _node_dockerfile(profile: NodeProfile) -> str:
         install_command = (
             f"{profile.package_manager} install --frozen-lockfile"
             if profile.lockfile and profile.package_manager == "pnpm"
-            else f"{profile.package_manager} install --immutable"
+            else f"{profile.package_manager} install --frozen-lockfile"
             if profile.lockfile
             else f"{profile.package_manager} install"
         )
@@ -183,7 +183,7 @@ def _node_readme(profile: NodeProfile, generated_paths: list[str]) -> str:
     elif profile.package_manager == "pnpm":
         setup_command = "corepack enable && pnpm install --frozen-lockfile" if profile.lockfile else "corepack enable && pnpm install"
     else:
-        setup_command = "corepack enable && yarn install --immutable" if profile.lockfile else "corepack enable && yarn install"
+        setup_command = "corepack enable && yarn install --frozen-lockfile" if profile.lockfile else "corepack enable && yarn install"
     language = "TypeScript" if profile.typescript else "JavaScript"
     return f"""# Reproducibility notes
 

@@ -36,7 +36,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: filesystem operation failed: {exc}", file=sys.stderr)
         return 2
 
-    stack = "Node.js/TypeScript" if getattr(result.profile, "stack", "") == "node" else "Python"
+    if getattr(result.profile, "stack", "") == "node":
+        stack = "Node.js/TypeScript" if getattr(result.profile, "typescript", False) else "Node.js"
+    else:
+        stack = "Python"
     print(f"Detected {stack} repository ({result.profile.confidence} confidence)")
     print(f"Patch: {result.patch_path}")
     print(f"Report: {result.report_path}")
